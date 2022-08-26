@@ -23,6 +23,34 @@ class MyDocument extends Document {
             href="https://storage.googleapis.com/builderbook/nprogress.min.css"
           />
           <link rel="stylesheet" href="https://storage.googleapis.com/builderbook/vs.min.css" />
+
+          <style>
+            {`
+             a {
+                font-weight: 400;
+                color: #58a6ff;
+                text-decoration: none;
+                outline: none;
+             }
+             blockquote {
+                padding: 0 1em;
+                color: #555;
+                border-left: 0.25em solid #dfe2e5;
+             }
+             pre {
+                display:block;
+                overflow-x:auto;
+                padding:0.5em;
+                background:#FFF;
+                color: #000;
+                border: 1px solid #ddd;
+                font-size: 14px;
+              }
+              code {
+                font-size: 14px;
+              }
+            `}
+          </style>
         </Head>
         <body>
           <Main />

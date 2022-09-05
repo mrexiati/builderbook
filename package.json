@@ -9,8 +9,11 @@
     "lint": "eslint '**/*.jsx'"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
     "@material-ui/core": "^4.11.4",
     "@material-ui/styles": "^4.11.4",
+    "@mui/material": "^5.10.3",
     "next": "^9.1.2",
     "prop-types": "15.7.2",
     "react": "^16.13.1",

@@ -1,6 +1,7 @@
 import App from 'next/app';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Header from '../components/Header';
 
 const propTypes = {
   Component: PropTypes.elementType.isRequired,
@@ -11,7 +12,12 @@ class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props;
 
-    return <Component {...pageProps} />;
+    return (
+      <>
+        <Header {...pageProps} />
+        <Component {...pageProps} />
+      </>
+    );
   }
 }
 

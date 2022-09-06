@@ -9,7 +9,10 @@
     "lint": "eslint '**/*.jsx'"
   },
   "dependencies": {
+    "@emotion/cache": "^11.10.3",
+    "@emotion/css": "^11.10.0",
     "@emotion/react": "^11.10.4",
+    "@emotion/server": "^11.10.0",
     "@emotion/styled": "^11.10.4",
     "@material-ui/core": "^4.11.4",
     "@material-ui/styles": "^4.11.4",

@@ -12,13 +12,13 @@ app.prepare().then(() => {
   const server = express();
 
   server.get('/', (req, res) => {
-    res.send('my express server');
+    res.send('my express server 101');
   });
 
   server.get('*', (req, res) => handle(req, res));
 
   server.listen(port, (err) => {
     if (err) throw err;
-    console.log(`>Ready on ${ROOT_URL}`); // eslint-disable-line no-console
+    console.log(`>Ready on ${ROOT_URL}`);
   });
 });

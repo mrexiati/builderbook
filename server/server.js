@@ -12,7 +12,8 @@ app.prepare().then(() => {
   const server = express();
 
   server.get('/', (req, res) => {
-    res.send('my express server 101');
+    const user = { email: 'test@builderbook.org' };
+    app.render(req, res, '/', { user });
   });
 
   server.get('*', (req, res) => handle(req, res));

@@ -32,10 +32,10 @@ const mongoSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  displayname: String,
+  displayName: String,
   avatarUrl: String,
 });
 
 const User = mongoose.model('User', mongoSchema);
 
-module.export = User;
+module.exports = User;

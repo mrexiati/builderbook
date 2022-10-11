@@ -3,8 +3,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "dev": "next",
-    "dev-express": "nodemon server/server.js --watch server",
+    "dev": "nodemon server/server.js --watch server",
     "build": "next build",
     "start": "next start",
     "lint": "eslint '**/*.jsx'"
@@ -22,6 +21,10 @@
     "dotenv": "8.2.0",
     "express": "^4.18.1",
     "express-session": "1.17.1",
+    "lodash": "4.17.20",
+    "nprogress": "0.2.0",
+    "passport": "0.4.1",
+    "passport-google-oauth": "2.0.0",
     "mongoose": "5.10.0",
     "next": "^9.1.2",
     "prop-types": "15.7.2",

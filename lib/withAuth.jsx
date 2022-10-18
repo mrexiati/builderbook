@@ -23,7 +23,7 @@ export default function withAuth(
   class App extends React.Component {
     static async getInitialProps(ctx) {
       const isFromServer = typeof window === 'undefined';
-      const user = ctx.req ? ctx.req.user : globalUser;
+      const user = ctx.req ? ctx.req.user && ctx.req.user.toObject() : globalUser;
 
       if (isFromServer && user) {
         user._id = user._id.toString();
@@ -45,11 +45,10 @@ export default function withAuth(
         globalUser = user;
       }
 
-      if (loginRequired && !logoutRequired && !user) {
-        Router.push('/public/login', 'login');
-
-        return;
-      }
+      // if (loginRequired && !logoutRequired && !user) {
+      //   Router.push('/login');
+      //   return;
+      // }
 
       if (logoutRequired && user) {
         Router.push('/');
@@ -57,7 +56,7 @@ export default function withAuth(
     }
 
     render() {
-      const user = this.props;
+      const { user } = this.props;
 
       if (loginRequired && !logoutRequired && !user) {
         return null;

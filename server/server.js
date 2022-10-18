@@ -52,9 +52,9 @@ app.prepare().then(() => {
   server.use(session(sess));
 
   server.get('/', async (req, res) => {
-    req.session.foo = 'bar';
     const user = await User.findOne({ slug: 'team-builder-book' });
-    app.render(req, res, '/', { user });
+    req.user = user;
+    app.render(req, res, '/');
   });
 
   server.get('*', (req, res) => handle(req, res));

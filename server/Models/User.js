@@ -65,8 +65,26 @@ class UserClass {
 
       return user;
     }
+
+    const slug = await generateSlug(this, displayName);
+    const userCount = await this.find().countDocuments();
+
+    const newUser = await this.create({
+      createdAt: new Date(),
+      googleId,
+      email,
+      googleToken,
+      displayName,
+      avatarUrl,
+      slug,
+      isAdmin: userCount === 0,
+    });
+
+    return _.pick(newUser, UserClass.publicFields());
   }
 }
+
+mongoSchema.loadClass(UserClass);
 
 const User = mongoose.model('User', mongoSchema);
 

@@ -9,13 +9,13 @@ async function createUniqueSlug(Model, slug, count) {
     return `${slug}-${count}`;
   }
 
-  return `${slug}-${count} + 1`;
+  return createUniqueSlug(Model, slug, count + 1);
 }
 
 async function generateSlug(Model, name, filter = {}) {
   const origSlug = slugify(name);
 
-  const user = await Model.findOne(Object.assign({ slug: origSlug }, ...filter), 'id');
+  const user = await Model.findOne({ slug: origSlug, ...filter }, 'id');
 
   if (!user) {
     return origSlug;

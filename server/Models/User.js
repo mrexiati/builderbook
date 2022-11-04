@@ -4,6 +4,10 @@ const generateSlug = require('../utils/slugify');
 
 const { Schema } = mongoose;
 
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useNewUrlParser', true);
+
 const mongoSchema = new Schema({
   googleId: {
     type: String,
@@ -49,12 +53,12 @@ class UserClass {
     if (user) {
       const modifier = {};
 
-      if (googleToken.access_token) {
-        modifier.access_token = googleToken.access_toke;
+      if (googleToken.accessToken) {
+        modifier.access_token = googleToken.accessToken;
       }
 
-      if (googleToken.refresh_token) {
-        modifier.refresh_token = googleToken.refresh_token;
+      if (googleToken.refreshToken) {
+        modifier.refresh_token = googleToken.refreshToken;
       }
 
       if (_.isEmpty(modifier)) {

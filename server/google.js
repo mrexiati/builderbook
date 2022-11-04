@@ -2,13 +2,13 @@ const passport = require('passport');
 const Strategy = require('passport-google-oauth').OAuth2Strategy;
 const User = require('./models/User');
 
-function setupGoogle({ ROOT_URL, server }) {
+function setupGoogle({ server, ROOT_URL }) {
   const verify = async (accessToken, refreshToken, profile, verified) => {
     let email;
     let avatarUrl;
 
-    if (profile.email) {
-      email = profile.emails[0].email;
+    if (profile.emails) {
+      email = profile.emails[0].value;
     }
 
     if (profile.photos && profile.photos.length > 0) {
@@ -55,7 +55,7 @@ function setupGoogle({ ROOT_URL, server }) {
   server.use(passport.session());
 
   server.get(
-    'auth/google',
+    '/auth/google',
     passport.authenticate('google', {
       scope: ['profile', 'email'],
       prompt: 'select_account',
@@ -72,13 +72,9 @@ function setupGoogle({ ROOT_URL, server }) {
     },
   );
 
-  server.get('/logout', (req, res, next) => {
-    req.logout((err) => {
-      if (err) {
-        next(err);
-      }
-      req.redirect('/login');
-    });
+  server.get('/logout', (req, res) => {
+    req.logout();
+    res.redirect('/login');
   });
 }
 

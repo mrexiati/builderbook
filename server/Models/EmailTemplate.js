@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { string } = require('prop-types');
+const _ = require('lodash');
 
 const { Schema } = mongoose;
 
@@ -20,6 +21,19 @@ const mongoSchema = new Schema({
 });
 
 const EmailTemplate = mongoose.model('EmailTemplate', mongoSchema);
+
+async function getEmailTemplate(name, params) {
+  const et = EmailTemplate.findOne({ name });
+
+  if (!et) {
+    throw new Error(`No email template found`);
+  }
+
+  return {
+    message: _.template(et.message)(params),
+    subject: _.template(et.subject)(params),
+  };
+}
 
 async function insertTemplate() {
   const templates = [
@@ -51,4 +65,5 @@ async function insertTemplate() {
   }
 }
 
-module.exports = EmailTemplate;
+exports.getEmailTemplate = getEmailTemplate;
+exports.insertTemplate = insertTemplate;

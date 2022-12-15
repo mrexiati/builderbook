@@ -1,21 +1,20 @@
 const mongoose = require('mongoose');
-const { string } = require('prop-types');
 const _ = require('lodash');
 
 const { Schema } = mongoose;
 
 const mongoSchema = new Schema({
   name: {
-    type: string,
+    type: String,
     required: true,
     unique: true,
   },
   subject: {
-    type: string,
+    type: String,
     required: true,
   },
   message: {
-    type: string,
+    type: String,
     required: true,
   },
 });
@@ -23,10 +22,10 @@ const mongoSchema = new Schema({
 const EmailTemplate = mongoose.model('EmailTemplate', mongoSchema);
 
 async function getEmailTemplate(name, params) {
-  const et = EmailTemplate.findOne({ name });
+  const et = await EmailTemplate.findOne({ name });
 
   if (!et) {
-    throw new Error(`No email template found`);
+    throw new Error(`No EmailTemplates found.`);
   }
 
   return {
@@ -35,35 +34,36 @@ async function getEmailTemplate(name, params) {
   };
 }
 
-async function insertTemplate() {
+async function insertTemplates() {
   const templates = [
     {
-      name: 'Welcome',
-      subject: 'Welcome to builderbooks',
-      message: `<% username %>,
-            <p>
-                Thanks for signing up for builderbooks
-            </p>
-            <p>
-                In our books we teach you to build an application from scratch
-            </p>
+      name: 'welcome',
+      subject: 'Welcome to builderbook.org',
+      message: `<%= userName %>,
+        <p>
+          Thanks for signing up for Builder Book!
+        </p>
+        <p>
+          In our books, we teach you how to build complete, production-ready web apps from scratch.
+        </p>
 
-            Team
-            `,
+        Kelly & Timur, Team Builder Book
+      `,
     },
   ];
 
   for (const t of templates) { // eslint-disable-line
     const et = await EmailTemplate.findOne({ name: t.name }); // eslint-disable-line
+
     const message = t.message.replace(/\n/g, '').replace(/[ ]+/g, ' ').trim();
 
     if (!et) {
-      EmailTemplate.createOne({ ...t, message });
-    } else if (et.subject !== t.subject || et.message !== t.message) {
+      EmailTemplate.create({ ...t, message });
+    } else if (et.subject !== t.subject || et.message !== message) {
       EmailTemplate.updateOne({ _id: et._id }, { $set: { message, subject: t.subject } }).exec();
     }
   }
 }
 
+exports.insertTemplates = insertTemplates;
 exports.getEmailTemplate = getEmailTemplate;
-exports.insertTemplate = insertTemplate;

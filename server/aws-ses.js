@@ -5,7 +5,7 @@ function sendEmail(options) {
     apiVersion: 'latest',
     region: process.env.AWS_REGION,
     accessKeyId: process.env.AWS_ACCESSKEYID,
-    secreteAcessKey: process.env.AWS_SECRETACCESSKEY,
+    secretAccessKey: process.env.AWS_SECRETACCESSKEY,
   });
 
   return new Promise((resolve, reject) => {
@@ -17,11 +17,11 @@ function sendEmail(options) {
         },
         Message: {
           Subject: {
-            Data: options.Subject,
+            Data: options.subject,
           },
           Body: {
             Html: {
-              Data: options.Body,
+              Data: options.body,
             },
           },
         },

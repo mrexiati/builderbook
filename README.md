@@ -6,7 +6,9 @@ You need:
 3. AWS SES
 
 To run the application:
+
 ```yarn install```
+
 ```yarn dev```
 
 

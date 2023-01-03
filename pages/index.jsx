@@ -1,8 +1,11 @@
-import Head from 'next/head';
-import PropTypes from 'prop-types';
 import React from 'react';
+import PropTypes from 'prop-types';
+import Head from 'next/head';
+
+import Button from '@mui/material/Button';
 
 import withAuth from '../lib/withAuth';
+import notify from '../lib/notify';
 
 const propTypes = {
   user: PropTypes.shape({
@@ -26,7 +29,11 @@ class Index extends React.Component {
           <meta name="description" content="List of purchased books." />
         </Head>
         <p>List of purchased books</p>
-        <p>Email: {user.email}</p>
+        <p>Email:&nbsp;{user.email}</p>
+
+        <Button variant="contained" onClick={() => notify('success message')}>
+          Click me to test notify and Notifier
+        </Button>
       </div>
     );
   }

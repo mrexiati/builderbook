@@ -1,17 +1,31 @@
 import React from 'react';
-import { Snackbar } from '@mui/material/Snackbar';
+import Snackbar from '@material-ui/core/Snackbar';
+
+let openSnackbarFn;
 
 class Notifier extends React.Component {
-  state = {
-    open: false,
-    message: '',
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      open: false,
+      message: '',
+    };
+  }
+
+  componentDidMount() {
+    openSnackbarFn = this.openSnackbar;
+  }
 
   handleSnackbarRequestClose = () => {
     this.setState({
       open: false,
       message: '',
     });
+  };
+
+  openSnackbar = ({ message }) => {
+    this.setState({ open: true, message });
   };
 
   render() {
@@ -32,6 +46,10 @@ class Notifier extends React.Component {
       />
     );
   }
+}
+
+export function openSnackbarExported({ message }) {
+  openSnackbarFn({ message });
 }
 
 export default Notifier;

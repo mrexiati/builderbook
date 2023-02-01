@@ -38,6 +38,10 @@ class BookClass {
 
     const book = bookDoc.toObject();
 
+    book.chapters = (await Chapter.find({ bookId: book._id }, 'title slug').sort({ order: 1 })).map(
+      (chapter) => chapter.toObject(),
+    );
+
     return book;
   }
 

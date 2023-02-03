@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const generateSlug = require('../utils/slugify');
 
 const { Schema } = mongoose;
 
@@ -12,6 +13,11 @@ const mongoSchema = new Schema({
     required: true,
     unique: true,
   },
+  githubRepo: {
+    type: String,
+    required: true,
+  },
+  githubLastCommitSha: String,
   createdAt: {
     type: Date,
     require: true,
@@ -45,9 +51,38 @@ class BookClass {
     return book;
   }
 
-  static async add({ name, price, githubRepo }) {}
+  static async add({ name, price, githubRepo }) {
+    const slug = await generateSlug(this, name);
 
-  static async edit({ id, name, price, githubRepo }) {}
+    if (!slug) {
+      throw new Error(`Error with slug generation for name: ${name}`);
+    }
+
+    return this.create({
+      name,
+      slug,
+      price,
+      githubRepo,
+      createdAt: new Date(),
+    });
+  }
+
+  static async edit({ id, name, price, githubRepo }) {
+    const book = await this.findById(id, 'slug name');
+
+    if (!book) {
+      throw new Error('Book id is not found by id');
+    }
+
+    const modifier = { price, githubRepo };
+
+    if (name !== book.name) {
+      modifier.name = name;
+      modifier.slug = await generateSlug(this, name);
+    }
+
+    return this.updateOne({ _id: id }, { $set: modifier });
+  }
 }
 
 mongoSchema.loadClass(BookClass);
@@ -55,3 +90,5 @@ mongoSchema.loadClass(BookClass);
 const Book = mongoose.model('Book', mongoSchema);
 
 module.export = Book;
+
+const Chapter = require('./Chapter');

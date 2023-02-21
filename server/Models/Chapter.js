@@ -60,7 +60,9 @@ const mongoSchema = new Schema({
   ],
 });
 
-class ChapterClass {}
+class ChapterClass {
+  static async getBySlug({ bookSlug, chapterSlug }) {}
+}
 
 mongoSchema.loadClass(ChapterClass);
 

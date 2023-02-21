@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
+const Book = require('./Book');
+
 const mongoSchema = new Schema({
   bookId: {
     type: Schema.Types.ObjectId,
@@ -61,7 +63,24 @@ const mongoSchema = new Schema({
 });
 
 class ChapterClass {
-  static async getBySlug({ bookSlug, chapterSlug }) {}
+  static async getBySlug({ bookSlug, chapterSlug }) {
+    const book = Book.getBySlug({ slug: bookSlug });
+
+    if (!book) {
+      throw new Error('Book not found');
+    }
+
+    const chapter = book.findOne({ bookId: book._id, slug: chapterSlug });
+
+    if (!chapter) {
+      throw new Error('Chapter not found');
+    }
+
+    const chapterObj = chapter.toObject();
+    chapterObj.book = book;
+
+    return chapterObj;
+  }
 }
 
 mongoSchema.loadClass(ChapterClass);

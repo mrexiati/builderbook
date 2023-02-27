@@ -83,6 +83,9 @@ class ChapterClass {
   }
 }
 
+mongoSchema.index({ bookId: 1, slug: 1 }, { unique: true });
+mongoSchema.index({ bookId: 1, githubFilePath: 1 }, { unique: true });
+
 mongoSchema.loadClass(ChapterClass);
 
 const Chapter = mongoose.model('Chapter', mongoSchema);

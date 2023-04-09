@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 
-import Button from '@mui/material/Button';
-import notify from '../../lib/notify';
-import withAuth from '../../lib/withAuth';
+import Button from '@material-ui/core/Button';
 
+import notify from '../../lib/notify';
+
+import withAuth from '../../lib/withAuth';
 import { getBookListApiMethod } from '../../lib/api/admin';
 
 const propTypes = {
@@ -44,6 +45,7 @@ Index.propTypes = propTypes;
 class IndexWithData extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       books: [],
     };
@@ -52,7 +54,7 @@ class IndexWithData extends React.Component {
   async componentDidMount() {
     try {
       const { books } = await getBookListApiMethod();
-      this.setState({ books });
+      this.setState({ books }); // eslint-disable-line
     } catch (err) {
       notify(err);
     }

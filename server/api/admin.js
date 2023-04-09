@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.use((req, res, next) => {
   if (!req.user || !req.user.isAdmin) {
-    req.status(401).json({ error: 'Unauthorized' });
+    res.status(401).json({ error: 'Unauthorized' });
     return;
   }
 

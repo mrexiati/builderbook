@@ -37,13 +37,28 @@ const mongoSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  isGithubConnected: {
+    type: Boolean,
+    default: false,
+  },
+  githubAccessToken: {
+    type: String,
+  },
+  githubId: {
+    type: String,
+    unique: true,
+  },
+  githubUsername: {
+    type: String,
+    unique: true,
+  },
   displayName: String,
   avatarUrl: String,
 });
 
 class UserClass {
   static publicFields() {
-    return ['id', 'displayName', 'email', 'avatarUrl', 'slug', 'isAdmin'];
+    return ['id', 'displayName', 'email', 'avatarUrl', 'slug', 'isAdmin', 'isGithubConnected'];
   }
 
   static async signInOrSignUp({ googleId, email, googleToken, displayName, avatarUrl }) {

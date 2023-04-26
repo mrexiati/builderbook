@@ -15,7 +15,26 @@ function setupGithub({ server, ROOT_URL }) {
   const verify = async ({ user, accessToken, profile }) => {};
 
   server.get('/auth/github', (req, res) => {
-    // define later
+    if (!req.user || !req.user.isAdmin) {
+      res.redirect(`${ROOT_URL}/login`);
+      return;
+    }
+
+    const { url, state } = oauthAuthorizationUrl({
+      clientId: CLIENT_ID,
+      redirectUrl: `${ROOT_URL}/auth/github/callback`,
+      scopes: ['repo', 'user: email'],
+      log: { warn: (message) => console.log(message) },
+    });
+
+    req.session.githubAuthState = state;
+    if (req.query && req.query.redirectUrl && req.query.startsWith('/')) {
+      req.session.next_url = req.query.redirectUrl;
+    } else {
+      req.session.next_url = null;
+    }
+
+    res.redirect(url);
   });
 
   server.get('/auth/github/callback', async (req, res) => {});

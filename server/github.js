@@ -110,4 +110,23 @@ function setupGithub({ server, ROOT_URL }) {
   });
 }
 
+function getAPI({ user, preview = [], request }) {
+  const github = new Octokit({
+    auth: user.githubAccessToken,
+    request: { timeout: 10000 },
+    preview,
+    log: {
+      info(msg, info) {
+        console.log(`GitHub API log: ${msg}`, {
+          ..._.omit(info, 'header', 'request', 'body'),
+          user: _.pick(user, '_id', 'githubUsername', 'githubId'),
+          ..._.pick(request, 'ip', 'hostname'),
+        });
+      },
+    },
+  });
+
+  return github;
+}
+
 exports.setupGithub = setupGithub;

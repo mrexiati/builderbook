@@ -40,12 +40,12 @@ function setupGithub({ server, ROOT_URL }) {
     const { url, state } = oauthAuthorizationUrl({
       clientId: CLIENT_ID,
       redirectUrl: `${ROOT_URL}/auth/github/callback`,
-      scopes: ['repo', 'user: email'],
+      scopes: ['repo', 'user:email'],
       log: { warn: (message) => console.log(message) },
     });
 
     req.session.githubAuthState = state;
-    if (req.query && req.query.redirectUrl && req.query.startsWith('/')) {
+    if (req.query && req.query.redirectUrl && req.query.redirectUrl.startsWith('/')) {
       req.session.next_url = req.query.redirectUrl;
     } else {
       req.session.next_url = null;
@@ -75,8 +75,8 @@ function setupGithub({ server, ROOT_URL }) {
 
     try {
       const response = await fetch('https://github.com/login/oauth/access_token', {
-        mmethod: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        method: 'POST',
+        headers: { 'Content-type': 'application/json;', Accept: 'application/json' },
         body: JSON.stringify({
           client_id: CLIENT_ID,
           client_secret: API_KEY,
@@ -110,15 +110,15 @@ function setupGithub({ server, ROOT_URL }) {
   });
 }
 
-function getAPI({ user, preview = [], request }) {
+function getAPI({ user, previews = [], request }) {
   const github = new Octokit({
     auth: user.githubAccessToken,
     request: { timeout: 10000 },
-    preview,
+    previews,
     log: {
       info(msg, info) {
-        console.log(`GitHub API log: ${msg}`, {
-          ..._.omit(info, 'header', 'request', 'body'),
+        console.log(`Github API log: ${msg}`, {
+          ..._.omit(info, 'headers', 'request', 'body'),
           user: _.pick(user, '_id', 'githubUsername', 'githubId'),
           ..._.pick(request, 'ip', 'hostname'),
         });
@@ -129,4 +129,31 @@ function getAPI({ user, preview = [], request }) {
   return github;
 }
 
+function getRepos({ user, request }) {
+  const github = getAPI({ user, request });
+
+  return github.repos.listForAuthenticatedUser({
+    visibility: 'private',
+    per_page: 100,
+    affiliation: 'owner',
+  });
+}
+
+function getRepoDetail({ user, repoName, request, path }) {
+  const github = getAPI({ user, request });
+  const [owner, repo] = repoName.split('/');
+
+  return github.repos.getContent({ owner, repo, path });
+}
+
+function getCommits({ user, repoName, request }) {
+  const github = getAPI({ user, request });
+  const [owner, repo] = repoName.split('/');
+
+  return github.repos.listCommits({ owner, repo });
+}
+
 exports.setupGithub = setupGithub;
+exports.getRepos = getRepos;
+exports.getRepoDetail = getRepoDetail;
+exports.getCommits = getCommits;

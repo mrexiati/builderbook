@@ -1,6 +1,7 @@
 /* eslint-disable no-use-before-define */
 
 const mongoose = require('mongoose');
+const { getCommits, getRepoDetail } = require('../github');
 const generateSlug = require('../utils/slugify');
 // const Chapter = require('./Chapter');
 
@@ -82,6 +83,42 @@ class BookClass {
     }
 
     return this.updateOne({ _id: id }, { $set: modifier });
+  }
+
+  static async syncContent({ id, user, request }) {
+    const book = await this.findById(id, 'githubRepo githubLastCommitSha');
+
+    if (!book) {
+      throw new Error('Book is not found by id');
+    }
+
+    const repoCommits = await getCommits({ user, repoName: book.githubRepo, request });
+
+    if (!repoCommits || !repoCommits.data || !repoCommits.data[0]) {
+      throw new Error('No commits!');
+    }
+
+    const lastCommitSha = repoCommits.data[0].sha;
+    if (lastCommitSha === book.lastCommitSha) {
+      throw new Error('No changes in the commit!');
+    }
+
+    const mainFolder = await getRepoDetail({ user, repoName: book.githubRepo, request, path: '' });
+
+    await Promise.all({
+      mainFolder.data.map(async (f) => {
+        if (f.type !== 'file') {
+          return;
+        }
+
+        if (f.path !== 'introduction.md' && ) {
+          return;
+        }
+
+      })
+    })
+
+    return book.updateOne({ githubLastCommitSha: lastCommitSha });
   }
 }
 

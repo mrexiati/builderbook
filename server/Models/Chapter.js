@@ -70,6 +70,38 @@ class ChapterClass {
 
     return chapterObj;
   }
+
+  static async syncContent({ book, data }) {
+    const {
+      title,
+      excerpt = '',
+      isFree = false,
+      sooTitle = '',
+      seoDescription = '',
+    } = data.attributes;
+
+    const { body, path } = data;
+
+    const chapter = this.findOne({
+      bookId: book.id,
+      githubFilePath: path,
+    });
+
+    let order;
+
+    if (path === 'introduction.md') {
+      order = 1;
+    } else {
+      order = parseInt(path.match(/[0-9]+/), 10) + 1;
+    }
+
+    const content = body;
+    const htmlContent = markdownToHtml(content);
+    const htmlExcerpt = markdownToHtml(excerpt);
+    const sections = getSections(content);
+
+    
+  }
 }
 
 mongoSchema.index({ bookId: 1, slug: 1 }, { unique: true });

@@ -1,9 +1,9 @@
 /* eslint-disable no-use-before-define */
 
 const mongoose = require('mongoose');
+const frontmatter = require('front-matter');
 const { getCommits, getRepoDetail } = require('../github');
 const generateSlug = require('../utils/slugify');
-// const Chapter = require('./Chapter');
 
 const { Schema } = mongoose;
 
@@ -105,18 +105,35 @@ class BookClass {
 
     const mainFolder = await getRepoDetail({ user, repoName: book.githubRepo, request, path: '' });
 
-    await Promise.all({
+    await Promise.all(
       mainFolder.data.map(async (f) => {
         if (f.type !== 'file') {
           return;
         }
 
-        if (f.path !== 'introduction.md' && ) {
+        if (f.path !== 'introduction.md' && !/chapter-([0-9]+)\.md/.test(f.path)) {
           return;
         }
 
-      })
-    })
+        const chapter = await getRepoDetail({
+          user,
+          repoName: book.githubRepo,
+          request,
+          path: f.path,
+        });
+
+        const data = frontmatter(Buffer.from(chapter.data.content, 'base64').toString('utf8'));
+
+        data.path = f.path;
+
+        try {
+          await Chapter.syncContent({ book, data });
+          console.log('Content is synced', { path: f.path });
+        } catch (error) {
+          console.error('Content sync has error', { path: f.path, error });
+        }
+      }),
+    );
 
     return book.updateOne({ githubLastCommitSha: lastCommitSha });
   }

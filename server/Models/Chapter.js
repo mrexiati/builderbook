@@ -1,6 +1,7 @@
 /* eslint-disable no-use-before-define */
 
 const mongoose = require('mongoose');
+const generateSlug = require('../utils/slugify');
 // const Book = require('./Book');
 
 const { Schema } = mongoose;
@@ -76,7 +77,7 @@ class ChapterClass {
       title,
       excerpt = '',
       isFree = false,
-      sooTitle = '',
+      seoTitle = '',
       seoDescription = '',
     } = data.attributes;
 
@@ -100,7 +101,44 @@ class ChapterClass {
     const htmlExcerpt = markdownToHtml(excerpt);
     const sections = getSections(content);
 
-    
+    if (!chapter) {
+      const slug = await generateSlug(this, title, { bookId: book._id });
+
+      return this.create({
+        bookId: book._id,
+        githubFilePath: path,
+        title,
+        slug,
+        isFree,
+        content,
+        htmlContent,
+        sections,
+        excerpt,
+        htmlExcerpt,
+        order,
+        seoTitle,
+        seoDescription,
+        createdAt: new Date(),
+      });
+    }
+
+    const modifier = {
+      content,
+      htmlContent,
+      sections,
+      excerpt,
+      htmlExcerpt,
+      order,
+      seoTitle,
+      seoDescription,
+    };
+
+    if (title !== chapter.title) {
+      modifier.title = title;
+      modifier.slug = await generateSlug(this, title, { bookId: chapter.bookId });
+    }
+
+    return this.updateOne({ _id: chapter._id }, { $set: modifier });
   }
 }
 

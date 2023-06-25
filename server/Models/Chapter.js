@@ -2,9 +2,79 @@
 
 const mongoose = require('mongoose');
 const generateSlug = require('../utils/slugify');
-// const Book = require('./Book');
+const Book = require('./Book');
+const marked = require('marked');
+const hljs = require('highlight.js');
+const he = require('he');
 
 const { Schema } = mongoose;
+
+function markdownToHtml(content) {
+  const renderer = new marked.Renderer();
+
+  renderer.link = (href, title, text) => {
+    const t = title ? ` title="${title}"` : '';
+    return `<a target="_blank" href="${href}" rel="noopener noreferrer">${text}</a>`
+  }
+
+  renderer.image = (href) => `<img
+    src="${href}"
+    style="border: 1px solid #ddd;"
+    width="100%"
+    alt="Builder Book"
+  >`
+
+  renderer.heading = (text, level) => {
+    const escapedText = text
+      .trim()
+      .toLocaleLowerCase()
+      .replace(/[^\w]+/g, '-');
+
+      if (level === 2) {
+        return `<h${level} class="chapter-section" style="color: #222; font-weight: 400;">
+            <a
+              name="${escapedText}"
+              href="#${escapedText}"
+              style="color: #222;"
+            > 
+              <i class="material-icons" style="vertical-align: middle; opacity: 0.5; cursor: pointer;">link</i>
+            </a>
+            <span class="section-anchor" name="${escapedText}">
+              ${text}
+            </span>
+          </h${level}>`;
+      }
+  
+      if (level === 4) {
+        return `<h${level} style="color: #222;">
+            <a
+              name="${escapedText}"
+              href="#${escapedText}"
+              style="color: #222;"
+            >
+              <i class="material-icons" style="vertical-align: middle; opacity: 0.5; cursor: pointer;">link</i>
+            </a>
+            ${text}
+          </h${level}>`;
+      }
+  
+      return `<h${level} style="color: #222; font-weight: 400;">${text}</h${level}>`;
+  }
+
+  marked.setOptions({
+    renderer,
+    breaks: true,
+    highlight(code, lang) {
+      if (!lang) {
+        return hljs.highlightAuto(code).value;
+      }
+
+      return hljs.highlight(lang, code).value;
+    },
+  });
+
+  return marked(he.decode(content));
+}
 
 const mongoSchema = new Schema({
   bookId: {

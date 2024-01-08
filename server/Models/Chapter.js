@@ -1,11 +1,11 @@
 /* eslint-disable no-use-before-define */
 
 const mongoose = require('mongoose');
-const generateSlug = require('../utils/slugify');
-const Book = require('./Book');
 const marked = require('marked');
-const hljs = require('highlight.js');
 const he = require('he');
+const hljs = require('highlight.js');
+// const Book = require('./Book');
+const generateSlug = require('../utils/slugify');
 
 const { Schema } = mongoose;
 
@@ -14,52 +14,52 @@ function markdownToHtml(content) {
 
   renderer.link = (href, title, text) => {
     const t = title ? ` title="${title}"` : '';
-    return `<a target="_blank" href="${href}" rel="noopener noreferrer">${text}</a>`
-  }
+    return `<a target="_blank" href="${href}" rel="noopener noreferrer"${t}>${text}</a>`;
+  };
 
   renderer.image = (href) => `<img
     src="${href}"
     style="border: 1px solid #ddd;"
     width="100%"
     alt="Builder Book"
-  >`
+  >`;
 
   renderer.heading = (text, level) => {
     const escapedText = text
       .trim()
-      .toLocaleLowerCase()
+      .toLowerCase()
       .replace(/[^\w]+/g, '-');
 
-      if (level === 2) {
-        return `<h${level} class="chapter-section" style="color: #222; font-weight: 400;">
-            <a
-              name="${escapedText}"
-              href="#${escapedText}"
-              style="color: #222;"
-            > 
-              <i class="material-icons" style="vertical-align: middle; opacity: 0.5; cursor: pointer;">link</i>
-            </a>
-            <span class="section-anchor" name="${escapedText}">
-              ${text}
-            </span>
-          </h${level}>`;
-      }
-  
-      if (level === 4) {
-        return `<h${level} style="color: #222;">
-            <a
-              name="${escapedText}"
-              href="#${escapedText}"
-              style="color: #222;"
-            >
-              <i class="material-icons" style="vertical-align: middle; opacity: 0.5; cursor: pointer;">link</i>
-            </a>
+    if (level === 2) {
+      return `<h${level} class="chapter-section" style="color: #222; font-weight: 400;">
+          <a
+            name="${escapedText}"
+            href="#${escapedText}"
+            style="color: #222;"
+          > 
+            <i class="material-icons" style="vertical-align: middle; opacity: 0.5; cursor: pointer;">link</i>
+          </a>
+          <span class="section-anchor" name="${escapedText}">
             ${text}
-          </h${level}>`;
-      }
-  
-      return `<h${level} style="color: #222; font-weight: 400;">${text}</h${level}>`;
-  }
+          </span>
+        </h${level}>`;
+    }
+
+    if (level === 4) {
+      return `<h${level} style="color: #222;">
+          <a
+            name="${escapedText}"
+            href="#${escapedText}"
+            style="color: #222;"
+          >
+            <i class="material-icons" style="vertical-align: middle; opacity: 0.5; cursor: pointer;">link</i>
+          </a>
+          ${text}
+        </h${level}>`;
+    }
+
+    return `<h${level} style="color: #222; font-weight: 400;">${text}</h${level}>`;
+  };
 
   marked.setOptions({
     renderer,
@@ -74,6 +74,32 @@ function markdownToHtml(content) {
   });
 
   return marked(he.decode(content));
+}
+
+function getSections(content) {
+  const renderer = new marked.Renderer();
+
+  const sections = [];
+  renderer.heading = (text, level) => {
+    if (level !== 2) {
+      return;
+    }
+
+    const escapedText = text
+      .trim()
+      .toLowerCase()
+      .replace(/[^\w]+/g, '-');
+
+    sections.push({ text, level, escapedText });
+  };
+
+  marked.setOptions({
+    renderer,
+  });
+
+  marked(he.decode(content));
+
+  return sections;
 }
 
 const mongoSchema = new Schema({
@@ -97,10 +123,6 @@ const mongoSchema = new Schema({
     type: String,
     required: true,
   },
-  excerpt: {
-    type: String,
-    default: '',
-  },
   content: {
     type: String,
     default: '',
@@ -110,6 +132,14 @@ const mongoSchema = new Schema({
     type: String,
     default: '',
     required: true,
+  },
+  excerpt: {
+    type: String,
+    default: '',
+  },
+  htmlExcerpt: {
+    type: String,
+    default: '',
   },
   createdAt: {
     type: Date,
@@ -121,6 +151,13 @@ const mongoSchema = new Schema({
   },
   seoTitle: String,
   seoDescription: String,
+  sections: [
+    {
+      text: String,
+      level: Number,
+      escapedText: String,
+    },
+  ],
 });
 
 class ChapterClass {
@@ -153,7 +190,7 @@ class ChapterClass {
 
     const { body, path } = data;
 
-    const chapter = this.findOne({
+    const chapter = await this.findOne({
       bookId: book.id,
       githubFilePath: path,
     });
@@ -198,6 +235,7 @@ class ChapterClass {
       sections,
       excerpt,
       htmlExcerpt,
+      isFree,
       order,
       seoTitle,
       seoDescription,
@@ -205,7 +243,9 @@ class ChapterClass {
 
     if (title !== chapter.title) {
       modifier.title = title;
-      modifier.slug = await generateSlug(this, title, { bookId: chapter.bookId });
+      modifier.slug = await generateSlug(this, title, {
+        bookId: chapter.bookId,
+      });
     }
 
     return this.updateOne({ _id: chapter._id }, { $set: modifier });

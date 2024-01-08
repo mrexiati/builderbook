@@ -21,4 +21,14 @@ router.get('/books', async (req, res) => {
   }
 });
 
+router.post('books/add', async (req, res) => {
+  try {
+    const book = await Book.add(req.body);
+    res.json(book);
+  } catch (err) {
+    console.err(err);
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
 module.exports = router;

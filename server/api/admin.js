@@ -21,12 +21,31 @@ router.get('/books', async (req, res) => {
   }
 });
 
-router.post('books/add', async (req, res) => {
+router.post('/books/add', async (req, res) => {
   try {
     const book = await Book.add(req.body);
     res.json(book);
   } catch (err) {
     console.err(err);
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
+router.post('/books/edit', async (req, res) => {
+  try {
+    const editedBook = await Book.edit(req.body);
+    res.json(editedBook);
+  } catch (err) {
+    console.err(err);
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
+router.post('/books/details/:slug', async (req, res) => {
+  try {
+    const book = await Book.getBySlug({ slug: req.params.slug });
+    res.json(book);
+  } catch (err) {
     res.json({ error: err.message || err.toString() });
   }
 });

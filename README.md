@@ -1,5 +1,5 @@
 ## Overview
-This is a personal project to make a copy of https://builderbook.org/, the app has admin and customer site, admin can add books and customers can authenticate with google account to purchase books and make payment with Stripe.
+This app has admin and customer site, admin can add books and customers can authenticate with google account to purchase books and make payment with Stripe.
 
 ### Setup
 The app is built with Next.js and MongoDB.

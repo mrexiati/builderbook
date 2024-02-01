@@ -1,5 +1,5 @@
 ## Overview
-This app has admin and customer site, admin can add books and customers can authenticate with google account to purchase books and make payment with Stripe.
+This is a personal learning project to build a full stack application from scratch and learn React, MongoDB and Express which are really fun. This is a copy of website https://builderbook.org/. This app has admin and customer site, admin can add books and customers can authenticate with google account to purchase books and make payment with Stripe.
 
 ### Setup
 The app is built with Next.js and MongoDB.

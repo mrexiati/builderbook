@@ -3,7 +3,7 @@
 ![Product Name Screen Shot](https://github.com/mrexiati/builderbook/assets/50190023/04409f67-03ca-4ff1-8470-f0eb1da28b76)
 This personal project involves building a full-stack application from scratch, focusing on learning React, MongoDB, and Express. Inspired by https://builderbook.org/, it tracks my learning progress. The app features separate admin and customer interfaces; admins can add books while customers can log in with Google and make purchases via Stripe. I aim to develop this into a boilerplate for future web applications.
 
-<p align="right"><a href="#readme-bottom">Jump to bottom</a></p>
+<p align="right"><a href="#readme-bottom">Jump to the bottom</a></p>
 
 <br>
 
@@ -77,7 +77,7 @@ STRIPE_TEST_SECRETKEY=
    yarn next start
    ```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right"><a href="#readme-top">Jump to the top</a></p>
 
 <br>
 

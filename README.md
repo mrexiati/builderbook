@@ -8,15 +8,12 @@ This personal project involves building a full-stack application from scratch, f
 
 ### Built With
 
-[![Next.js](https://img.shields.io/badge/Next.js-black?style=flat-square&logo=next.js)](https://nextjs.org/) [![React](https://img.shields.io/badge/React-blue?style=flat-square&logo=react)](https://reactjs.org/) [![MongoDB](https://img.shields.io/badge/MongoDB-green?style=flat-square&logo=mongodb)](https://www.mongodb.com/) [![Node.js](https://img.shields.io/badge/Node.js-green?style=flat-square&logo=node.js)](https://nodejs.org/) [![Express](https://img.shields.io/badge/Express-white?style=flat-square&logo=express)](https://expressjs.com/)
-
-<p align="right"><a href="#readme-bottom">Jump to bottom</a></p>
+[![React](https://img.shields.io/badge/React-blue?style=flat-square&logo=react)](https://reactjs.org/) [![Next.js](https://img.shields.io/badge/Next.js-black?style=flat-square&logo=next.js)](https://nextjs.org/)  [![Node.js](https://img.shields.io/badge/Node.js-green?style=flat-square&logo=node.js)](https://nodejs.org/) [![Express](https://img.shields.io/badge/Express-white?style=flat-square&logo=express)](https://expressjs.com/) [![MongoDB](https://img.shields.io/badge/MongoDB-green?style=flat-square&logo=mongodb)](https://www.mongodb.com/)
 
 
 ### Third-Party APIs Used
 
 [![Google OAuth](https://img.shields.io/badge/Google_OAuth-blue?style=flat-square&logo=google)](https://developers.google.com/identity) [![GitHub API](https://img.shields.io/badge/GitHub_API-black?style=flat-square&logo=github)](https://developer.github.com/v3/) [![Stripe API](https://img.shields.io/badge/Stripe_API-blueviolet?style=flat-square&logo=stripe)](https://stripe.com/docs/api) [![AWS SES](https://img.shields.io/badge/AWS_SES-orange?style=flat-square&logo=amazon-aws)](https://aws.amazon.com/ses/) [![Mailchimp API](https://img.shields.io/badge/Mailchimp_API-yellow?style=flat-square&logo=mailchimp)](https://mailchimp.com/developer/api/)
-
 
 
 ### Prerequisites

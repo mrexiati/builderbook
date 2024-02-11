@@ -78,7 +78,7 @@ STRIPE_TEST_SECRETKEY=
    yarn next start
    ```
 
-<p align="right"><a href="#readme-top">Jump to the bottom</a></p>
+<p align="right"><a href="#readme-top">Jump to the top</a></p>
 
 <br>
 

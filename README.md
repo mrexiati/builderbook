@@ -79,8 +79,6 @@ STRIPE_TEST_SECRETKEY=
 ## Roadmap
 
 I will make this as my own boiler plate app for other web applications by making changes and adding more features which are WIP.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 <a id="readme-bottom"></a>
 
 

@@ -1,3 +1,4 @@
+<a id="readme-top"></a>
 ## About The Project
 
 ![Product Name Screen Shot](https://github.com/mrexiati/builderbook/assets/50190023/04409f67-03ca-4ff1-8470-f0eb1da28b76)
@@ -77,7 +78,7 @@ STRIPE_TEST_SECRETKEY=
    yarn next start
    ```
 
-<p align="right"><a href="#readme-top">Jump to the top</a></p>
+<p align="right"><a href="#readme-top">Jump to the bottom</a></p>
 
 <br>
 

@@ -10,10 +10,7 @@ This personal project involves building a full-stack application from scratch, f
 
 [![Next.js](https://img.shields.io/badge/Next.js-black?style=flat-square&logo=next.js)](https://nextjs.org/) [![React](https://img.shields.io/badge/React-blue?style=flat-square&logo=react)](https://reactjs.org/) [![MongoDB](https://img.shields.io/badge/MongoDB-green?style=flat-square&logo=mongodb)](https://www.mongodb.com/) [![Node.js](https://img.shields.io/badge/Node.js-green?style=flat-square&logo=node.js)](https://nodejs.org/) [![Express](https://img.shields.io/badge/Express-white?style=flat-square&logo=express)](https://expressjs.com/)
 
-
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 ### Third-Party APIs Used
@@ -21,16 +18,8 @@ This personal project involves building a full-stack application from scratch, f
 
 
 
-
-<!-- GETTING STARTED -->
-## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
 * .env
 
 ```env
@@ -67,10 +56,11 @@ GITHUB_LIVE_SECRETKEY=
 NEXT_PUBLIC_STRIPE_TEST_PUBLISHABLEKEY=
 NEXT_PUBLIC_STRIPE_LIVE_PUBLISHABLEKEY=
 STRIPE_TEST_SECRETKEY=
-ST
+```
 
 
 ### Installation
+
 1. Clone the repo
    ```sh
    git clone https://github.com/reshatma/builderbook.git

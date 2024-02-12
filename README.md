@@ -75,7 +75,7 @@ STRIPE_TEST_SECRETKEY=
 3. Set up your .env
 4. Run the applicatio non your local
    ```sh
-   yarn next start
+   yarn start
    ```
 
 <p align="right"><a href="#readme-top">Jump to the top</a></p>

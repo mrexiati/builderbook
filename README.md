@@ -84,7 +84,7 @@ STRIPE_TEST_SECRETKEY=
 
 ## Roadmap
 
-I will make this as my own boiler plate app for other web applications by making changes and adding more features which are WIP.
+I will make this as my own boiler plate app by making changes and adding more features which are WIP. My application will be public and deployed soon, please stay tuned.
 <a id="readme-bottom"></a>
 
 

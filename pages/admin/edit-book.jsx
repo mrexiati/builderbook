@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 import withAuth from "../../lib/withAuth";
 import EditBookPage from "../../components/admin/EditBook";
-import { getBookDetailApiMethod } from "../../lib/api/admin";
+import { editBookApiMethod, getBookDetailApiMethod } from "../../lib/api/admin";
 import notify from "../../lib/notify";
 
 const propTypes = {
@@ -47,39 +47,32 @@ class EditBookPage extends React.Component {
     NProgress.start();
 
     try {
-      const book = await addBookApiMethod(data);
+      const editedBook = await editBookApiMethod({ ...data, id: book._id });
 
       notify("Saved");
 
-      try {
-        const bookId = book._id;
-
-        await syncBookContentApiMethod({ bookId });
-
-        notify("Synced");
-
-        NProgress.done();
-
-        Router.push(
-          `admin/book-detail?slug=${book.slug}`,
-          `/admin/book-detail/${book.slug}`
-        );
-      } catch (err) {
-        notify(err.message || err.toString());
-
-        NProgress.done();
-      }
+      NProgress.done();
+      Router.push(
+        `/admin/book-detail?slug=${editedBook.slug}`,
+        `/admin/book-detail/${editedBook.slug}`
+      );
     } catch (err) {
-      notify(err.message || err.toString());
+      notify(err);
 
       NProgress.done();
     }
   };
 
   render() {
+    const { book } = this.state;
+
+    if (!book) {
+      return null;
+    }
+
     return (
-      <div style={{ padding: "10px 45px" }}>
-        <EditBookPage onSave={this.addBookOnSave} />
+      <div>
+        <EditBook onSave={this.editBookOnSave} book={book} />
       </div>
     );
   }

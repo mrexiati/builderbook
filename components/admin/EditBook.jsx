@@ -21,7 +21,114 @@ const defaultProps = {
   book: null,
 };
 
-class EditBook extends React.Component {}
+class EditBook extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      book: props.book || {},
+      repos: [],
+    };
+  }
+
+  async componentDidMount() {
+    try {
+      const { repos } = await getGithubReposApiMethod();
+
+      this.setState({ repos });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  onSubmit = (event) => {
+    event.preventDefault();
+    const { name, price, githubRepo } = this.state.book;
+
+    if (!name) {
+      notify("Name is required");
+      return;
+    }
+
+    if (!price) {
+      notify("Price is required");
+      return;
+    }
+
+    if (!githubRepo) {
+      notify("GithubRepo is required");
+      return;
+    }
+
+    this.props.onSave(this.state.book);
+  };
+
+  render() {
+    return (
+      <div style={{ padding: "10px 45px" }}>
+        <form onSubmit={this.onSubmit}>
+          <br />
+          <div>
+            <TextField
+              onChange={(event) => {
+                this.setState({
+                  book: { ...this.state.book, name: event.target.value },
+                });
+              }}
+              value={this.state.book.name}
+              type="text"
+              label="Book's title"
+              style={styleTextField}
+            />
+          </div>
+          <br />
+          <br />
+          <TextField
+            onChange={(event) => {
+              this.setState({
+                book: { ...this.state.book, price: Number(event.target.value) },
+              });
+            }}
+            value={this.state.book.price}
+            type="number"
+            label="Book's price"
+            className="textFieldInput"
+            style={styleTextField}
+            step="1"
+          />
+          <br />
+          <br />
+          <div>
+            <span>Github repo: </span>
+            <Select
+              value={this.state.book.githubRepo || ""}
+              input={<Input />}
+              onChange={(event) => {
+                this.setState({
+                  book: { ...this.state.book, githubRepo: event.target.value },
+                });
+              }}
+            >
+              <MenuItem value="">
+                <em>-- choose github repo--</em>
+              </MenuItem>
+              {this.state.repos.map((r) => (
+                <MenuItem value={r.full_name} key={r.id}>
+                  {r.full_name}
+                </MenuItem>
+              ))}
+            </Select>
+          </div>
+          <br />
+          <br />
+          <Button variant="contained" type="submit">
+            Save
+          </Button>
+        </form>
+      </div>
+    );
+  }
+}
 
 EditBook.propTypes = propTypes;
 EditBook.defaultProps = defaultProps;

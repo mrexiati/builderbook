@@ -1,12 +1,13 @@
-import React from "react";
-import Router from "next/router";
-import NProgress from "nprogress";
-import PropTypes from "prop-types";
+import React from 'react';
+import Router from 'next/router';
+import NProgress from 'nprogress';
+import PropTypes from 'prop-types';
+// import Error from 'next/error';
 
-import withAuth from "../../lib/withAuth";
-import EditBookPage from "../../components/admin/EditBook";
-import { editBookApiMethod, getBookDetailApiMethod } from "../../lib/api/admin";
-import notify from "../../lib/notify";
+import EditBook from '../../components/admin/EditBook';
+import { getBookDetailApiMethod, editBookApiMethod } from '../../lib/api/admin';
+import withAuth from '../../lib/withAuth';
+import notify from '../../lib/notify';
 
 const propTypes = {
   slug: PropTypes.string.isRequired,
@@ -30,35 +31,29 @@ class EditBookPage extends React.Component {
 
     try {
       const { slug } = this.props;
-
       const book = await getBookDetailApiMethod({ slug });
-      this.setState(book);
-
+      this.setState({ book }); // eslint-disable-line
       NProgress.done();
     } catch (err) {
-      notify(err.message | err.toString());
-
+      notify(err.message || err.toString());
       NProgress.done();
     }
   }
 
   editBookOnSave = async (data) => {
-    const book = this.state;
+    const { book } = this.state;
     NProgress.start();
 
     try {
       const editedBook = await editBookApiMethod({ ...data, id: book._id });
-
-      notify("Saved");
-
+      notify('Saved');
       NProgress.done();
       Router.push(
         `/admin/book-detail?slug=${editedBook.slug}`,
-        `/admin/book-detail/${editedBook.slug}`
+        `/admin/book-detail/${editedBook.slug}`,
       );
     } catch (err) {
       notify(err);
-
       NProgress.done();
     }
   };
@@ -67,6 +62,7 @@ class EditBookPage extends React.Component {
     const { book } = this.state;
 
     if (!book) {
+      // return <Error statusCode={500} />;
       return null;
     }
 
@@ -80,4 +76,4 @@ class EditBookPage extends React.Component {
 
 EditBookPage.propTypes = propTypes;
 
-export default withAuth(EditBookPage);
+export default withAuth(EditBookPage, { adminRequired: true });

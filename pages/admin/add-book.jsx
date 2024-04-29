@@ -1,51 +1,50 @@
-import React from 'react'
-import Router from 'next/router'
-import NProgress from 'nprogress'
+import React from 'react';
+import Router from 'next/router';
+import NProgress from 'nprogress';
 
-import withAuth from '../../lib/withAuth'
-import EditBook from '../../components/admin/EditBook'
-import { addBookApiMethod, syncBookContentApiMethod } from "../../lib/api/admin";
-import notify from '../../lib/notify'
+import withAuth from '../../lib/withAuth';
+import EditBook from '../../components/admin/EditBook';
+import { addBookApiMethod, syncBookContentApiMethod } from '../../lib/api/admin';
+import notify from '../../lib/notify';
 
 class AddBook extends React.Component {
-    addBookOnSave = async (data) => {
-        NProgress.start();
+  addBookOnSave = async (data) => {
+    NProgress.start();
 
-        try {
-            const book = await addBookApiMethod(data);
+    try {
+      const book = await addBookApiMethod(data);
 
-            notify('Saved');
+      notify('Saved');
 
-            try {
-                const bookId = book._id;
+      try {
+        const bookId = book._id;
 
-                await syncBookContentApiMethod({ bookId });
+        await syncBookContentApiMethod({ bookId });
 
-                notify('Synced');
+        notify('Synced');
 
-                NProgress.done();
+        NProgress.done();
 
-                Router.push(`admin/book-detail?slug=${book.slug}`, `/admin/book-detail/${book.slug}`)
-            } catch (err) {
-                notify(err.message || err.toString());
+        Router.push(`admin/book-detail?slug=${book.slug}`, `/admin/book-detail/${book.slug}`);
+      } catch (err) {
+        notify(err.message || err.toString());
 
-                NProgress.done()
-            }
-        }catch (err) {
-            notify(err.message || err.toString());
+        NProgress.done();
+      }
+    } catch (err) {
+      notify(err.message || err.toString());
 
-            NProgress.done()
-        }
-
+      NProgress.done();
     }
+  };
 
-    render() {
-        return(
-            <div style={{ padding: '10px 45px'}}>
-                <EditBook onSave={this.addBookOnSave} />
-            </div>
-        )
-    }
+  render() {
+    return (
+      <div style={{ padding: '10px 45px' }}>
+        <EditBook onSave={this.addBookOnSave} />
+      </div>
+    );
+  }
 }
 
-export default withAuth(AddBook)
+export default withAuth(AddBook, { adminRequired: true });

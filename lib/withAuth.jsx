@@ -6,12 +6,12 @@ let globalUser = null;
 
 export default function withAuth(
   BaseComponent,
-  { loginRequired = true, logoutRequired = false } = {},
+  { loginRequired = true, logoutRequired = false, adminRequired = false } = {},
 ) {
   class App extends React.Component {
     static async getInitialProps(ctx) {
       const isFromServer = typeof window === 'undefined';
-      const user = ctx.req ? ctx.req.user && ctx.req.user.toObject() : globalUser;
+      const user = ctx.req ? ctx.req.user && ctx.req.user : globalUser;
 
       if (isFromServer && user) {
         user._id = user._id.toString();
@@ -38,8 +38,17 @@ export default function withAuth(
         return;
       }
 
+      if (adminRequired && user && !user.isAdmin) {
+        Router.push('/customer/my-books', '/my-books');
+      }
+
       if (logoutRequired && user) {
-        Router.push('/');
+        if (!user.isAdmin) {
+          Router.push('/customer/my-books', '/my-books');
+          return;
+        }
+
+        Router.push('/admin');
       }
     }
 
@@ -47,6 +56,10 @@ export default function withAuth(
       const { user } = this.props;
 
       if (loginRequired && !logoutRequired && !user) {
+        return null;
+      }
+
+      if (adminRequired && user && !user.isAdmin) {
         return null;
       }
 

@@ -1,3 +1,6 @@
+import { setupGithub } from './github';
+import routesWithSlug from './routesWithSlug';
+
 const express = require('express');
 const session = require('express-session');
 const mongoSessionStore = require('connect-mongo');
@@ -56,12 +59,10 @@ app.prepare().then(async () => {
   await insertTemplates();
 
   setupGoogle({ server, ROOT_URL });
+  setupGithub({ server, ROOT_URL });
   api(server);
 
-  server.get('/books/:bookSlug/:chapterSlug', (req, res) => {
-    const { bookSlug, chapterSlug } = req.params;
-    app.render(req, res, '/public/read-chapter', { bookSlug, chapterSlug });
-  });
+  routesWithSlug({ server, app });
 
   server.get('*', (req, res) => {
     const url = URL_MAP[req.path];
